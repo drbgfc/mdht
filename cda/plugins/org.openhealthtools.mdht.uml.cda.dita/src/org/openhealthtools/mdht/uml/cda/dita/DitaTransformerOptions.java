@@ -42,6 +42,8 @@ public class DitaTransformerOptions {
 
 	public static final String CARDINALITY_AFTER_ELEMENT = "cardinalityAfterElement";
 
+	public static final String APPEND_CONFORMANCE_RULES_ATTRIBUTE = "appendConformanceRules";
+
 	public static final String EXAMPLE_DEPTH = "exampleDepth";
 
 	private IPath outputPath = null;
@@ -54,7 +56,28 @@ public class DitaTransformerOptions {
 
 	private boolean cardinalityAfterElement = false;
 
+	private boolean appendConformanceRules = false;
+
+	private boolean noVerticalLinesInTables;
+
 	private boolean includeVocabularyConstraints = false;
+
+	private boolean reset = false;
+
+	/**
+	 * @return the reset
+	 */
+	public boolean isReset() {
+		return reset;
+	}
+
+	/**
+	 * @param reset
+	 *            the reset to set
+	 */
+	public void setReset(boolean reset) {
+		this.reset = reset;
+	}
 
 	private int exampleDepth;
 
@@ -108,6 +131,7 @@ public class DitaTransformerOptions {
 		includeUsageNotes = store.getBoolean(INCLUDE_USAGE_NOTES);
 		includeVocabularyConstraints = store.getBoolean(INCLUDE_VOCABULARY_CONSTRAINTS);
 		cardinalityAfterElement = store.getBoolean(CARDINALITY_AFTER_ELEMENT);
+		appendConformanceRules = store.getBoolean(APPEND_CONFORMANCE_RULES_ATTRIBUTE);
 
 		exampleDepth = store.getInt(EXAMPLE_DEPTH);
 
@@ -119,6 +143,35 @@ public class DitaTransformerOptions {
 
 	public boolean isCardinalityAfterElement() {
 		return cardinalityAfterElement;
+	}
+
+	/**
+	 * The value of the appendConformanceRule attribute in the dita-transform ant task xml
+	 *
+	 * @return appendConformanceRules
+	 */
+	public boolean isAppendConformanceRules() {
+		return appendConformanceRules;
+	}
+
+	/**
+	 * The value of the noVerticalLinesInTables attribute in the dita-transform ant task xml
+	 * If set, use <br>
+	 *
+	 * {@code
+	 *
+	<table frame="topbot" rowsep="1">
+	 * } <br>
+	 * instead of <br>
+	 * {@code
+	 *
+	<table frame="all" rowsep="1" colsep="1">
+	 *  }
+	 *
+	 * @return appendConformanceRules
+	 */
+	public boolean isNoVerticalLinesInTables() {
+		return noVerticalLinesInTables;
 	}
 
 	public boolean isIncludeTableView() {
@@ -135,6 +188,23 @@ public class DitaTransformerOptions {
 
 	public void setCardinalityAfterElement(boolean cardinalityAfterElement) {
 		this.cardinalityAfterElement = cardinalityAfterElement;
+	}
+
+	/**
+	 * @param appendConformanceRules
+	 *            should the Dita transformation append conformance rules
+	 */
+	public void setAppendConformanceRules(boolean appendConformanceRules) {
+		this.appendConformanceRules = appendConformanceRules;
+	}
+
+	/**
+	 * @param noVerticalLinesInTables
+	 *            should the Dita transformer disable vertical lines in tables
+	 */
+	public void setNoVerticalLinesInTables(Boolean noVerticalLinesInTables) {
+		this.noVerticalLinesInTables = noVerticalLinesInTables;
+
 	}
 
 	public boolean isIncludeVocabularyConstraints() {

@@ -51,7 +51,28 @@ public class TransformToDita extends CDAModelingSubTask {
 
 	private Boolean cardinalityAfterElement = null;
 
+	private Boolean appendConformanceRules = null;
+
+	private Boolean noVerticalLinesInTables = null;
+
 	private Boolean includeVocabularyConstraints = null;
+
+	private Boolean reset = null;
+
+	/**
+	 * @return the reset
+	 */
+	public Boolean getReset() {
+		return reset;
+	}
+
+	/**
+	 * @param reset
+	 *            the reset to set
+	 */
+	public void setReset(Boolean reset) {
+		this.reset = reset;
+	}
 
 	private int exampleDepth;
 
@@ -120,8 +141,9 @@ public class TransformToDita extends CDAModelingSubTask {
 							c.getDeclaredField("eINSTANCE");
 						}
 					} catch (Throwable t) {
-						logWarning("Unable to load Run time,  Samples will not be generated! " + t.getMessage() +
-								generatedPackage);
+						logWarning(
+							"Unable to load Run time,  Samples will not be generated! " + t.getMessage() +
+									generatedPackage);
 					}
 
 				}
@@ -147,6 +169,15 @@ public class TransformToDita extends CDAModelingSubTask {
 		if (includeVocabularyConstraints == null && project.getProperty("includeVocabularyConstraints") != null) {
 			includeVocabularyConstraints = Boolean.valueOf(project.getProperty("includeVocabularyConstraints"));
 		}
+
+		if (reset == null && project.getProperty("reset") != null) {
+			reset = Boolean.valueOf(project.getProperty("reset"));
+		}
+
+		if (noVerticalLinesInTables == null && project.getProperty("noVerticalLinesInTables") != null) {
+			noVerticalLinesInTables = Boolean.valueOf(project.getProperty("noVerticalLinesInTables"));
+		}
+
 		if (includeTableView == null && project.getProperty("includeTableView") != null) {
 			includeTableView = Boolean.valueOf(project.getProperty("includeTableView"));
 		}
@@ -155,6 +186,9 @@ public class TransformToDita extends CDAModelingSubTask {
 		}
 		if (cardinalityAfterElement == null && project.getProperty("cardinalityAfterElement") != null) {
 			cardinalityAfterElement = Boolean.valueOf(project.getProperty("cardinalityAfterElement"));
+		}
+		if (appendConformanceRules == null && project.getProperty("appendConformanceRules") != null) {
+			appendConformanceRules = Boolean.valueOf(project.getProperty("appendConformanceRules"));
 		}
 
 		Integer.getInteger(project.getProperty("exampleDepth"));
@@ -185,6 +219,14 @@ public class TransformToDita extends CDAModelingSubTask {
 
 	public void setCardinalityAfterElement(boolean cardinalityAfter) {
 		cardinalityAfterElement = new Boolean(cardinalityAfter);
+	}
+
+	public void setAppendConformanceRules(boolean appendConformanceRules) {
+		this.appendConformanceRules = new Boolean(appendConformanceRules);
+	}
+
+	public void setNoVerticalLinesInTables(boolean noVerticalLinesInTables) {
+		this.noVerticalLinesInTables = new Boolean(noVerticalLinesInTables);
 	}
 
 	// ANT task child elements
@@ -234,8 +276,20 @@ public class TransformToDita extends CDAModelingSubTask {
 			options.setCardinalityAfterElement(cardinalityAfterElement);
 		}
 
+		if (appendConformanceRules != null) {
+			options.setAppendConformanceRules(appendConformanceRules);
+		}
+
+		if (noVerticalLinesInTables != null) {
+			options.setNoVerticalLinesInTables(noVerticalLinesInTables);
+		}
+
 		if (includeVocabularyConstraints != null) {
 			options.setIncludeVocabularyConstraints(includeVocabularyConstraints);
+		}
+
+		if (reset != null) {
+			options.setReset(reset);
 		}
 
 		options.setExampleDepth(exampleDepth);

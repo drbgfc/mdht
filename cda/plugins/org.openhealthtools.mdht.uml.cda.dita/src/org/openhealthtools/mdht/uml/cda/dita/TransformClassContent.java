@@ -23,6 +23,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -57,7 +58,9 @@ import org.eclipse.uml2.uml.util.UMLSwitch;
 import org.openhealthtools.mdht.uml.cda.core.profile.LogicalConstraint;
 import org.openhealthtools.mdht.uml.cda.core.util.CDAModelUtil;
 import org.openhealthtools.mdht.uml.cda.core.util.CDAProfileUtil;
+import org.openhealthtools.mdht.uml.cda.core.util.ClinicalDocumentCreator;
 import org.openhealthtools.mdht.uml.cda.core.util.InstanceGenerator;
+import org.openhealthtools.mdht.uml.cda.core.util.ModelStatus;
 import org.openhealthtools.mdht.uml.cda.core.util.RIMModelUtil;
 import org.openhealthtools.mdht.uml.cda.dita.internal.Logger;
 import org.openhealthtools.mdht.uml.common.util.NamedElementComparator;
@@ -98,24 +101,28 @@ public class TransformClassContent extends TransformAbstract {
 
 		for (Constraint constraint : umlClass.getOwnedRules()) {
 			unprocessedConstraints.add(constraint);
-			for (Element element : constraint.getConstrainedElements()) {
-				if (element instanceof Property) {
-					String name = ((Property) element).getName();
-					List<Constraint> rules = constraintMap.get(name);
-					if (rules == null) {
-						rules = new ArrayList<Constraint>();
-						constraintMap.put(name, rules);
+
+			if (CDAProfileUtil.getLogicalConstraint(constraint) == null) {
+				for (Element element : constraint.getConstrainedElements()) {
+					if (element instanceof Property) {
+						String name = ((Property) element).getName();
+						List<Constraint> rules = constraintMap.get(name);
+						if (rules == null) {
+							rules = new ArrayList<Constraint>();
+							constraintMap.put(name, rules);
+						}
+						rules.add(constraint);
+					} else if (element instanceof Constraint) {
+						Constraint subConstraint = (Constraint) element;
+						List<Constraint> rules = subConstraintMap.get(subConstraint);
+						if (rules == null) {
+							rules = new ArrayList<Constraint>();
+							subConstraintMap.put(subConstraint, rules);
+						}
+						rules.add(constraint);
 					}
-					rules.add(constraint);
-				} else if (element instanceof Constraint) {
-					Constraint subConstraint = (Constraint) element;
-					List<Constraint> rules = subConstraintMap.get(subConstraint);
-					if (rules == null) {
-						rules = new ArrayList<Constraint>();
-						subConstraintMap.put(subConstraint, rules);
-					}
-					rules.add(constraint);
 				}
+
 			}
 		}
 
@@ -136,6 +143,20 @@ public class TransformClassContent extends TransformAbstract {
 					}
 				}
 			}
+
+			// Remove participants in logical constraints that do not have a severity
+			for (Constraint constraint : parent.getOwnedRules()) {
+				LogicalConstraint logicConstraint = CDAProfileUtil.getLogicalConstraint(constraint);
+				if (logicConstraint != null) {
+					for (Element constrainedElement : constraint.getConstrainedElements()) {
+						if (constrainedElement instanceof Property &&
+								CDAModelUtil.getValidationKeyword(constrainedElement) == null) {
+							allProperties.remove(constrainedElement);
+						}
+					}
+				}
+			}
+
 		}
 
 		Iterator<Property> propertyIterator = allProperties.iterator();
@@ -167,7 +188,8 @@ public class TransformClassContent extends TransformAbstract {
 		for (int index = 0; index < allAssociations.size(); index++) {
 			Classifier classifier = endTypes.get(index);
 			boolean hasSubclass = false;
-			List<DirectedRelationship> specializations = classifier.getTargetDirectedRelationships(UMLPackage.Literals.GENERALIZATION);
+			List<DirectedRelationship> specializations = classifier.getTargetDirectedRelationships(
+				UMLPackage.Literals.GENERALIZATION);
 			for (DirectedRelationship relationship : specializations) {
 				Classifier specific = ((Generalization) relationship).getSpecific();
 				if (endTypes.contains(specific)) {
@@ -233,7 +255,7 @@ public class TransformClassContent extends TransformAbstract {
 		for (Constraint constraint : allConstraints) {
 			writer.println("<li>" + CDAModelUtil.computeConformanceMessage(constraint, true)
 			// + " " + modelPrefix(constraint)
-					+ "</li>");
+			+ "</li>");
 		}
 
 		// <ol> cannot be empty
@@ -266,7 +288,8 @@ public class TransformClassContent extends TransformAbstract {
 		if (cdaClass != null) {
 			writer.print("<p id=\"shortdesc\">");
 			if (!umlClass.equals(cdaClass)) {
-				writer.print("[" + cdaClassName + ": templateId <tt>" + CDAModelUtil.getTemplateId(umlClass) + "</tt>]");
+				writer.print(
+					"[" + cdaClassName + ": templateId <tt>" + CDAModelUtil.getTemplateId(umlClass) + "</tt>]");
 			}
 			writer.println("</p>");
 
@@ -352,23 +375,26 @@ public class TransformClassContent extends TransformAbstract {
 
 		for (Constraint constraint : umlClass.getOwnedRules()) {
 			unprocessedConstraints.add(constraint);
+
 			for (Element element : constraint.getConstrainedElements()) {
-				if (element instanceof Property) {
-					String name = ((Property) element).getName();
-					List<Constraint> rules = constraintMap.get(name);
-					if (rules == null) {
-						rules = new ArrayList<Constraint>();
-						constraintMap.put(name, rules);
+				if (CDAProfileUtil.getLogicalConstraint(constraint) == null) {
+					if (element instanceof Property) {
+						String name = ((Property) element).getName();
+						List<Constraint> rules = constraintMap.get(name);
+						if (rules == null) {
+							rules = new ArrayList<Constraint>();
+							constraintMap.put(name, rules);
+						}
+						rules.add(constraint);
+					} else if (element instanceof Constraint) {
+						Constraint subConstraint = (Constraint) element;
+						List<Constraint> rules = subConstraintMap.get(subConstraint);
+						if (rules == null) {
+							rules = new ArrayList<Constraint>();
+							subConstraintMap.put(subConstraint, rules);
+						}
+						rules.add(constraint);
 					}
-					rules.add(constraint);
-				} else if (element instanceof Constraint) {
-					Constraint subConstraint = (Constraint) element;
-					List<Constraint> rules = subConstraintMap.get(subConstraint);
-					if (rules == null) {
-						rules = new ArrayList<Constraint>();
-						subConstraintMap.put(subConstraint, rules);
-					}
-					rules.add(constraint);
 				}
 			}
 		}
@@ -389,8 +415,10 @@ public class TransformClassContent extends TransformAbstract {
 			LogicalConstraint logicConstraint = CDAProfileUtil.getLogicalConstraint(constraint);
 			if (logicConstraint != null) {
 				for (Element constrainedElement : constraint.getConstrainedElements()) {
-					if (constrainedElement instanceof Property) {
+					if (constrainedElement instanceof Property &&
+							CDAModelUtil.getValidationKeyword(constrainedElement) == null) {
 						allProperties.remove(constrainedElement);
+						allAttributes.remove(constrainedElement);
 					}
 				}
 			}
@@ -399,6 +427,7 @@ public class TransformClassContent extends TransformAbstract {
 		allProperties.removeAll(allAttributes);
 		Collections.sort(allAttributes, new NamedElementComparator());
 		// XML attributes
+
 		for (Property property : allAttributes) {
 			hasRules = true;
 			writer.println("<li>" + CDAModelUtil.computeConformanceMessage(property, true));
@@ -406,8 +435,10 @@ public class TransformClassContent extends TransformAbstract {
 			appendPropertyRules(writer, property, constraintMap, subConstraintMap, unprocessedConstraints);
 			writer.println("</li>");
 		}
+
 		Collections.sort(allProperties, new PropertyComparator());
 		// XML elements
+
 		for (Property property : allProperties) {
 			hasRules = true;
 			writer.println("<li>" + CDAModelUtil.computeConformanceMessage(property, true));
@@ -443,6 +474,21 @@ public class TransformClassContent extends TransformAbstract {
 			EObject eObject = instanceGenerator.createInstance(umlClass, exampleDepth > 0
 					? exampleDepth
 					: 2);
+			if (eObject==null) {
+				ArrayList<ModelStatus> statuses = new ArrayList<ModelStatus>();
+				ClinicalDocumentCreator creator = new ClinicalDocumentCreator(
+					null, umlClass.eResource().getResourceSet(), statuses);
+				creator.enableSampleData(true);
+				creator.enableSampleDataExpansion(true);
+				Collection<Property> props = Collections.emptyList();
+				EObject newObject = creator.initializeSnippet(umlClass, props);
+				if (newObject != null) {
+					String xml = creator.toXMLString(newObject, umlClass);
+					writer.write(xml);
+					writer.println("]]></codeblock>"); 
+					return;
+				}
+			}
 			if (eObject != null) {
 				instanceGenerator.save(eObject, writer);
 			} else {
@@ -477,8 +523,8 @@ public class TransformClassContent extends TransformAbstract {
 			writer.print("<i>Abstract</i> ");
 		}
 		if (cdaClass != null && !umlClass.equals(cdaClass)) {
-			writer.print("[" + prefix + cdaClassName + ": templateId <tt>" + CDAModelUtil.getTemplateId(umlClass) +
-					"</tt>]");
+			writer.print(
+				"[" + prefix + cdaClassName + ": templateId <tt>" + CDAModelUtil.getTemplateId(umlClass) + "</tt>]");
 		}
 		writer.println("</shortdesc>");
 
@@ -518,9 +564,8 @@ public class TransformClassContent extends TransformAbstract {
 		}
 	}
 
-	private void appendPropertyRules(PrintWriter writer, Property property,
-			Map<String, List<Constraint>> constraintMap, Map<Constraint, List<Constraint>> subConstraintMap,
-			List<Constraint> unprocessedConstraints) {
+	private void appendPropertyRules(PrintWriter writer, Property property, Map<String, List<Constraint>> constraintMap,
+			Map<Constraint, List<Constraint>> subConstraintMap, List<Constraint> unprocessedConstraints) {
 
 		// association typeCode and property type
 		String assocConstraints = "";

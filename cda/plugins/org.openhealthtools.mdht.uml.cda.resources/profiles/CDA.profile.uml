@@ -555,6 +555,23 @@ memberEnd->forAll(type.oclIsKindOf(uml::Class) and not type.name.oclIsUndefined(
         <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_qN47UEhoEeCAwtsXrgwZCA"/>
         <defaultValue xmi:type="uml:LiteralBoolean" xmi:id="_r_988EhoEeCAwtsXrgwZCA"/>
       </ownedAttribute>
+      <ownedAttribute xmi:id="_vJkdAIfwEeWEAfhl6ZGiRw" name="kind" type="_n0r6IIfwEeWEAfhl6ZGiRw">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_vJlEEIfwEeWEAfhl6ZGiRw"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vJlEEYfwEeWEAfhl6ZGiRw" value="1"/>
+        <defaultValue xmi:type="uml:LiteralString" xmi:id="_12PwYIfwEeWEAfhl6ZGiRw" value="OPEN"/>
+      </ownedAttribute>
+      <ownedAttribute xmi:id="_x8IEMIfwEeWEAfhl6ZGiRw" name="strict">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_x8IEMYfwEeWEAfhl6ZGiRw"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_x8IEMofwEeWEAfhl6ZGiRw" value="1"/>
+        <defaultValue xmi:type="uml:LiteralString" xmi:id="_2wUzAIfwEeWEAfhl6ZGiRw" value="false"/>
+      </ownedAttribute>
+      <ownedAttribute xmi:id="_MV2d8Iv3EeWxq6yfVjbPgA" name="negationIndicator">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_PwTyoIv3EeWxq6yfVjbPgA"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_PwTLkIv3EeWxq6yfVjbPgA" value="1"/>
+        <defaultValue xmi:type="uml:LiteralString" xmi:id="_QlOocIv3EeWxq6yfVjbPgA" value="false"/>
+      </ownedAttribute>
     </packagedElement>
     <packagedElement xmi:type="uml:Stereotype" xmi:id="_x6N6EJmVEd6OiP9GTesZug" name="PropertyValidation">
       <generalization xmi:id="_0PhkkJmVEd6OiP9GTesZug" general="_e_WLgJmVEd6OiP9GTesZug"/>
@@ -783,6 +800,10 @@ memberEnd->forAll(type.oclIsKindOf(uml::Class) and not type.name.oclIsUndefined(
     </packagedElement>
     <packagedElement xmi:type="uml:Extension" xmi:id="_W9ZOoK7XEeOIc9h626Utvg" name="Constraint_Unimplementable" memberEnd="_W9Z1sK7XEeOIc9h626Utvg _W9Z1sa7XEeOIc9h626Utvg">
       <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_W9Z1sK7XEeOIc9h626Utvg" name="extension_Unimplementable" type="_Vcn_cK7XEeOIc9h626Utvg" aggregation="composite" association="_W9ZOoK7XEeOIc9h626Utvg"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Enumeration" xmi:id="_n0r6IIfwEeWEAfhl6ZGiRw" name="ValidationKind">
+      <ownedLiteral xmi:id="_rE0OIIfwEeWEAfhl6ZGiRw" name="OPEN"/>
+      <ownedLiteral xmi:id="_slJ_gIfwEeWEAfhl6ZGiRw" name="CLOSED"/>
     </packagedElement>
     <profileApplication xmi:id="_ud74ACCuEd-RxoWH9gAx2A">
       <eAnnotations xmi:id="_ud8fECCuEd-RxoWH9gAx2A" source="http://www.eclipse.org/uml2/2.0.0/UML">

@@ -20,22 +20,30 @@ public interface ICDAProfileConstants {
 	/*
 	 * Entry Stereotype and Properties
 	 */
-	/** @deprecated */
+	/**
+	 * @deprecated
+	 */
 	@Deprecated
 	public static final String ENTRY = "Entry";
 
-	/** @deprecated */
+	/**
+	 * @deprecated
+	 */
 	@Deprecated
 	public static final String ENTRY_TYPE_CODE = "typeCode";
 
 	/*
 	 * Entry Relationship Stereotype and Properties
 	 */
-	/** @deprecated */
+	/**
+	 * @deprecated
+	 */
 	@Deprecated
 	public static final String ENTRY_RELATIONSHIP = "EntryRelationship";
 
-	/** @deprecated */
+	/**
+	 * @deprecated
+	 */
 	@Deprecated
 	public static final String ENTRY_RELATIONSHIP_TYPE_CODE = "typeCode";
 
@@ -47,6 +55,8 @@ public interface ICDAProfileConstants {
 	public static final String VALIDATION_MESSAGE = "message";
 
 	public static final String VALIDATION_SEVERITY = "severity";
+
+	public static final String VALIDATION_NEGATION_INDICATOR = "negationIndicator";
 
 	public static final String VALIDATION_RULE_ID = "ruleId";
 
@@ -96,7 +106,9 @@ public interface ICDAProfileConstants {
 	/*
 	 * Vocab Specification Stereotype and Properties
 	 */
-	/** @deprecated */
+	/**
+	 * @deprecated
+	 */
 	@Deprecated
 	public static final String VOCAB_SPECIFICATION = "VocabSpecification";
 
@@ -170,11 +182,15 @@ public interface ICDAProfileConstants {
 
 	public static final String NULL_FLAVOR_KIND = "NullFlavorKind";
 
-	/** @deprecated */
+	/**
+	 * @deprecated
+	 */
 	@Deprecated
 	public static final String ENTRY_KIND = "EntryKind";
 
-	/** @deprecated */
+	/**
+	 * @deprecated
+	 */
 	@Deprecated
 	public static final String ENTRY_RELATIONSHIP_KIND = "EntryRelationshipKind";
 
@@ -182,5 +198,11 @@ public interface ICDAProfileConstants {
 	 * Base source URI for CDA code-generation annotations.
 	 */
 	public static final String CDA_ANNOTATION_SOURCE = "http://www.openhealthtools.org/mdht/uml/cda/annotation";
+
+	public static final String VALIDATION_KIND = "ValidationKind";
+
+	public static final String KIND = "kind";
+
+	public static final String STRICT = "strict";
 
 }
